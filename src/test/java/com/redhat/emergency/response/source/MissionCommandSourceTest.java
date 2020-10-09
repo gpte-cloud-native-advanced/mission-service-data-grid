@@ -42,7 +42,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 
 @QuarkusTest
-public class MessageCommandSourceTest {
+public class MissionCommandSourceTest {
 
     @Inject
     MissionCommandSource missionCommandSource;
@@ -188,7 +188,7 @@ public class MessageCommandSourceTest {
 
         @Override
         public void commit(Handler<AsyncResult<Void>> completionHandler) {
-            MessageCommandSourceTest.this.messageAck = true;
+            MissionCommandSourceTest.this.messageAck = true;
 
             Promise<Void> future = Promise.promise();
             future.future().onComplete(completionHandler);
