@@ -41,13 +41,13 @@ public class MissionCommandSource {
     public Uni<CompletionStage<Void>> process(Message<String> missionCommandMessage) {
 
         return Uni.createFrom().item(missionCommandMessage)
-                .onItem().apply(mcm -> accept(missionCommandMessage.getPayload()))
-                .onItem().apply(o -> o.flatMap(j -> validate(j.getJsonObject("body"))).orElseThrow(() -> new IllegalStateException("Message ignored")))
-                .onItem().apply(m -> m.status(MissionStatus.CREATED))
-                .onItem().apply(this::addRoute)
-                .onItem().apply(this::addToRepository)
-                .onItem().produceUni(this::publishMissionStartedEventAsync)
-                .onItem().apply(m -> missionCommandMessage.ack())
+                .onItem().transform(mcm -> accept(missionCommandMessage.getPayload()))
+                .onItem().transform(o -> o.flatMap(j -> validate(j.getJsonObject("body"))).orElseThrow(() -> new IllegalStateException("Message ignored")))
+                .onItem().transform(m -> m.status(MissionStatus.CREATED))
+                .onItem().transform(this::addRoute)
+                .onItem().transform(this::addToRepository)
+                .onItem().transformToUni(this::publishMissionStartedEventAsync)
+                .onItem().transform(m -> missionCommandMessage.ack())
                 .onFailure().recoverWithItem(t -> missionCommandMessage.ack());
     }
 
