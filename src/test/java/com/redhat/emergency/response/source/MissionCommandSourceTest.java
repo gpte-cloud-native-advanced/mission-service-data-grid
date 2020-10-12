@@ -78,6 +78,7 @@ public class MissionCommandSourceTest {
         when(routePlanner.getDirections(any(Location.class), any(Location.class), any(Location.class)))
                 .thenReturn(Arrays.asList(missionStep1, missionStep2));
         when(eventSink.missionStarted(any(Mission.class))).thenReturn(Uni.createFrom().emitter(emitter -> emitter.complete(null)));
+        when(repository.add(any(Mission.class))).thenReturn(Uni.createFrom().nullItem());
 
         MessageWithAck<String> message = MessageWithAck.of(payload);
         source.send(message);
